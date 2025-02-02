@@ -1,0 +1,91 @@
+version: '3.8'
+
+services:
+  # C02 - JMS Broker
+  jms-broker:
+    image: rmohr/activemq
+    container_name: jms-broker
+    ports:
+      - "61616:61616"
+      - "8161:8161"
+    networks:
+      - app-network
+
+  # C03 - MDB & RMI Client
+  mdb-client:
+    build: ./C03
+    container_name: c03-mdb
+    depends_on:
+      - jms-broker
+    networks:
+      - app-network
+
+  # C04 & C05 - RMI Servers
+  rmi-server1:
+    build: ./C04
+    container_name: c04-rmi
+    ports:
+      - "1100:1099"
+    networks:
+      - app-network
+
+  rmi-server2:
+    build: ./C05
+    container_name: c05-rmi
+    ports:
+      - "1101:1099"
+    networks:
+      - app-network
+
+  # C06 - MongoDB + MySQL + Node.js API
+  mongo:
+    image: mongo
+    container_name: mongo-container
+    ports:
+      - "27017:27017"
+    networks:
+      - app-network
+
+  mysql:
+    image: mysql
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: images_db
+    ports:
+      - "3306:3306"
+    networks:
+      - app-network
+
+  c06-nodejs:
+    build: ./C06-NodeJS
+    container_name: c06-nodejs
+    depends_on:
+      - mongo
+      - mysql
+    ports:
+      - "3000:3000"
+    networks:
+      - app-network
+    environment:
+      MONGO_URI: mongodb://mongo-container:27017/snmp_db
+      MYSQL_HOST: mysql
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+      MYSQL_DATABASE: images_db
+
+  # C01 - Java Back-End
+  java-backend:
+    build: ./C01-Javalin-JMS
+    container_name: c01-javalin-jms
+    depends_on:
+      - jms-broker
+    ports:
+      - "8080:8080"
+    networks:
+      - app-network
+
+
+networks:
+  app-network:
+    driver: bridge
