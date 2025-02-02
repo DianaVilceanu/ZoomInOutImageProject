@@ -1,0 +1,114 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>C02-TomEE</groupId>
+  <artifactId>C02-TomEE</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>war</packaging>
+
+  <!-- Repositories -->
+  <repositories>
+    <repository>
+      <id>central</id>
+      <url>https://repo.maven.apache.org/maven2</url>
+    </repository>
+    <repository>
+      <id>apache-snapshots</id>
+      <url>https://repository.apache.org/content/repositories/snapshots/</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+    <repository>
+        <id>local-repo</id>
+        <url>file://C:/Users/savan/.m2/repository</url>
+    </repository>
+
+  </repositories>
+
+  <!-- Dependencies -->
+  <dependencies>
+    <!-- Jakarta EE API pentru suport EJB și altele -->
+    <dependency>
+    <groupId>jakarta.platform</groupId>
+    <artifactId>jakarta.jakartaee-api</artifactId>
+    <version>10.0.0</version>
+    <scope>provided</scope>
+</dependency>
+
+
+
+    <!-- Apache ActiveMQ pentru JMS -->
+    <dependency>
+      <groupId>org.apache.activemq</groupId>
+      <artifactId>activemq-all</artifactId>
+      <version>5.17.3</version>
+    </dependency>
+
+    <!-- Dependență pentru proiectul C01 -->
+    <dependency>
+      <groupId>C01-Javalin-JMS</groupId>
+      <artifactId>C01-Javalin-JMS</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+  </dependencies>
+
+  <!-- Build Plugins -->
+  <build>
+   <plugins>
+      <!-- Plugin pentru JAR -->
+    <plugin>
+    <artifactId>maven-jar-plugin</artifactId>
+    <version>3.2.0</version>
+    <executions>
+        <execution>
+            <id>make-jar</id>
+            <phase>package</phase>
+            <goals>
+                <goal>jar</goal>
+            </goals>
+            <configuration>
+                <classifier>standalone</classifier>
+                <archive>
+                    <manifest>
+                        <mainClass>com.example.javalin.App</mainClass>
+                    </manifest>
+                </archive>
+            </configuration>
+        </execution>
+    </executions>
+</plugin>
+
+      <!-- Plugin pentru WAR -->
+      <plugin>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>3.2.3</version>
+        <configuration>
+        <failOnMissingWebXml>false</failOnMissingWebXml>
+    </configuration>
+        <executions>
+          <execution>
+            <id>make-war</id>
+            <phase>package</phase>
+            <goals>
+              <goal>war</goal>
+            </goals>
+            <configuration>
+              <failOnMissingWebXml>false</failOnMissingWebXml>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- Plugin pentru compilare -->
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.1</version>
+        <configuration>
+          <release>21</release>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>

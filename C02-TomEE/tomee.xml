@@ -1,0 +1,15 @@
+<tomee>
+ 
+    <Resource id="jms/ConnectionFactory" type="javax.jms.ConnectionFactory"
+              class-name="org.apache.activemq.ActiveMQConnectionFactory">
+        BrokerURL = tcp://172.18.0.2:61616
+    </Resource>
+
+    <Resource id="jms/imageTopic" type="javax.jms.Topic"/>
+    
+
+    <Resource id="ActiveMQBroker" type="org.apache.activemq.broker.BrokerService">
+        persistent = false
+        useJmx = true
+    </Resource>
+</tomee>
