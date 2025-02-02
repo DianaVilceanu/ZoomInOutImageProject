@@ -1,0 +1,5 @@
+com\example\rmi\RMIClient.class
+com\example\utils\ImageProcessor.class
+com\example\dto\ImageData.class
+com\example\mdb\ImageProcessingMDB.class
+com\example\rmi\RMIInterface.class
