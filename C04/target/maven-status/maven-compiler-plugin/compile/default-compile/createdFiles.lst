@@ -1,0 +1,3 @@
+com\example\rmi\RMIClient.class
+com\example\rmi\RMIServer.class
+com\example\rmi\RMIInterface.class
