@@ -12,4 +12,5 @@ Am creat dockerfile-uri pentru fiecare container, este posibila si deschiderea f
 Arhitectura se regaseste in architecture.pdf
 
 Proiectul este unul complex si am depus foarte multa munca in crearea sa.
+
 Va multumesc frumos, Vilceanu Diana-Maria
