@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Zoom Processor</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+        <h1>Upload an Image for Processing</h1>
+        <input type="file" id="imageInput" accept="image/*">
+        <button onclick="uploadImage()">Upload</button>
+
+        <h2>Image Preview</h2>
+        <div class="image-preview">
+            <img id="previewImage" src="" alt="Preview" style="display: none;">
+        </div>
+
+        <h2>Processed Image</h2>
+        <div class="image-container">
+            <img id="processedImage" src="" alt="Processed Image">
+        </div>
+
+        <div class="buttons">
+            <button onclick="zoomImage(1.2)">Zoom In</button>
+            <button onclick="zoomImage(0.8)">Zoom Out</button>
+            <button onclick="resetZoom()">Reset</button>
+        </div>
+
+      <a id="downloadLink" class="download-link" href="#" download style="display: none;">⬇ Download Image</a>
+
+    </div>
+
+    <script>
+        let scale = 1;
+        const previewImage = document.getElementById('previewImage');
+        const processedImage = document.getElementById('processedImage');
+
+        function uploadImage() {
+            const fileInput = document.getElementById('imageInput');
+            if (fileInput.files.length === 0) {
+                alert("Please select an image");
+                return;
+            }
+
+            // Preview Image
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                previewImage.src = event.target.result;
+                previewImage.style.display = "block";
+            };
+            reader.readAsDataURL(file);
+
+            const formData = new FormData();
+            formData.append("image", fileInput.files[0]);
+
+            fetch("http://localhost:8080/upload", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.text()) 
+            .then(data => {
+                console.log("Server Response:", data);
+                try {
+                    let jsonData = JSON.parse(data);
+                    alert("Image is being processed. Wait for the notification.");
+                } catch (e) {
+                    console.error("Invalid JSON:", data);
+                }
+            })
+            .catch(error => console.error("Error:", error));
+
+        }
+
+        function zoomImage(factor) {
+            scale *= factor;
+            processedImage.style.transform = `scale(${scale})`;
+        }
+
+        function resetZoom() {
+            scale = 1;
+            processedImage.style.transform = `scale(1)`;
+        }
+
+        // WebSocket 
+        const socket = new WebSocket("ws://localhost:3000");
+
+        socket.onmessage = function(event) {
+            const imageId = event.data;
+            const downloadUrl = `http://localhost:3000/download/${imageId}`;
+            
+            processedImage.src = downloadUrl;
+            processedImage.style.display = "block";
+
+            //butonul de download
+            downloadLink.href = downloadUrl;
+            downloadLink.style.display = "inline-block";
+        };
+
+    </script>
+
+</body>
+</html>

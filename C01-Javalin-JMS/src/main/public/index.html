@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Zoom Processor</title>
+</head>
+<body>
+    <h1>Upload an Image for Processing</h1>
+    <input type="file" id="imageInput">
+    <button onclick="uploadImage()">Upload</button>
+
+    <h2>Processed Image</h2>
+    <img id="processedImage" style="max-width: 500px; display: none;">
+
+    <script>
+        function uploadImage() {
+            const fileInput = document.getElementById('imageInput');
+            if (fileInput.files.length === 0) {
+                alert("Please select an image");
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append("image", fileInput.files[0]);
+
+            fetch("http://localhost:8080/upload", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Image Uploaded:", data);
+                alert("Image is being processed. Wait for the notification.");
+            })
+            .catch(error => console.error("Error:", error));
+        }
+
+        // WebSocket to receive notification when image is processed
+        const socket = new WebSocket("ws://localhost:8080"); // Connection to C06 Node.js WebSocket
+
+        socket.onmessage = function(event) {
+            const imageUrl = event.data;
+            document.getElementById('processedImage').src = imageUrl;
+            document.getElementById('processedImage').style.display = "block";
+            alert("Image processing complete! Check the result.");
+        };
+    </script>
+</body>
+</html>
