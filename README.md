@@ -3,10 +3,11 @@ READ ME
 
 This project is a distributed microservices application designed to process images with zoom in/out functionality. It leverages a Java EE architecture, JMS messaging, RMI services, and a Node.js REST API, all orchestrated with Docker and deployed on a Google Cloud VM.
 
-🗂️ Architecture Overview
+Architecture Overview
+
 The system consists of six Docker containers working together:
 
-C01: Java Javalin/Apache Tomcat Microservice
+- C01: Java Javalin/Apache Tomcat Microservice
 
 Provides a REST endpoint to accept image upload requests.
 
@@ -14,13 +15,13 @@ Publishes processing tasks via JMS to the broker.
 
 Notifies when processing is complete.
 
-C02: Apache TomEE JMS Broker
+- C02: Apache TomEE JMS Broker
 
 Acts as a message broker with Topics & Queues.
 
 Manages communication between microservices.
 
-C03: Apache TomEE EJB Client & REST API
+- C03: Apache TomEE EJB Client & REST API
 
 Consumes JMS messages.
 
@@ -30,13 +31,13 @@ Stores processed images in the database via the Node.js REST API.
 
 Publishes a message when a job is done.
 
-C04 & C05: Apache TomEE RMI Servers
+- C04 & C05: Apache TomEE RMI Servers
 
 Provide distributed RMI objects for heavy image processing.
 
 Work together to zoom and transform images.
 
-C06: Node.js REST API with MongoDB
+- C06: Node.js REST API with MongoDB
 
 Exposes two REST endpoints:
 
@@ -46,7 +47,7 @@ One for serving images to the frontend.
 
 Stores and retrieves processed images.
 
-Frontend
+- Frontend
 
 A simple HTML page that allows users to upload an image and download the processed result when it’s ready.
 
